@@ -4,23 +4,25 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import Admin from "./pages/Admin";
-
+import Products from "./pages/Products";
 export default function App() {
 
   return (
     <BrowserRouter>
 
-      <Routes>
+     <Routes>
 
-        <Route path="/" element={<Home />} />
+  <Route path="/" element={<Home />} />
 
-        <Route path="/login" element={<Login />} />
+  <Route path="/products" element={<Products />} />
 
-        <Route path="/dashboard" element={<Dashboard />} />
+  <Route path="/login" element={<Login />} />
 
-        <Route path="/admin" element={<Admin />} />
+  <Route path="/dashboard" element={<Dashboard />} />
 
-      </Routes>
+  <Route path="/admin" element={<Admin />} />
+
+</Routes>
 
     </BrowserRouter>
   );
