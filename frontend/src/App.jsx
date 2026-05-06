@@ -1,29 +1,27 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+
+import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import Admin from "./pages/Admin";
-import ProtectedRoute from "./components/ProtectedRoute";
 
 export default function App() {
+
   return (
     <BrowserRouter>
+
       <Routes>
 
-        <Route path="/" element={<Login />} />
+        <Route path="/" element={<Home />} />
 
-        <Route path="/dashboard" element={
-          <ProtectedRoute>
-            <Dashboard />
-          </ProtectedRoute>
-        } />
+        <Route path="/login" element={<Login />} />
 
-        <Route path="/admin" element={
-          <ProtectedRoute>
-            <Admin />
-          </ProtectedRoute>
-        } />
+        <Route path="/dashboard" element={<Dashboard />} />
+
+        <Route path="/admin" element={<Admin />} />
 
       </Routes>
+
     </BrowserRouter>
   );
 }
