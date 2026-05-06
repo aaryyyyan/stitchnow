@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Checkout from "./pages/Checkout";
 import Wishlist from "./pages/Wishlist";
 import Cart from "./pages/Cart";
 import ProductDetails from "./pages/ProductDetails";
@@ -12,7 +13,7 @@ export default function App() {
   return (
     <BrowserRouter>
 
-    <Routes>
+   <Routes>
 
   <Route path="/" element={<Home />} />
 
@@ -23,6 +24,8 @@ export default function App() {
   <Route path="/cart" element={<Cart />} />
 
   <Route path="/wishlist" element={<Wishlist />} />
+
+  <Route path="/checkout" element={<Checkout />} />
 
   <Route path="/login" element={<Login />} />
 
