@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import AIRecommendations from "./pages/AIRecommendations";
 import PaymentGateway from "./pages/PaymentGateway";
 import OrderTracking from "./pages/OrderTracking";
 import Checkout from "./pages/Checkout";
@@ -15,7 +16,7 @@ export default function App() {
   return (
     <BrowserRouter>
 
- <Routes>
+  <Routes>
 
   <Route path="/" element={<Home />} />
 
@@ -32,6 +33,8 @@ export default function App() {
   <Route path="/tracking" element={<OrderTracking />} />
 
   <Route path="/payment" element={<PaymentGateway />} />
+
+  <Route path="/ai" element={<AIRecommendations />} />
 
   <Route path="/login" element={<Login />} />
 
