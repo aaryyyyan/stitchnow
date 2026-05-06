@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Wishlist from "./pages/Wishlist";
 import Cart from "./pages/Cart";
 import ProductDetails from "./pages/ProductDetails";
 import Home from "./pages/Home";
@@ -20,6 +21,8 @@ export default function App() {
   <Route path="/product" element={<ProductDetails />} />
 
   <Route path="/cart" element={<Cart />} />
+
+  <Route path="/wishlist" element={<Wishlist />} />
 
   <Route path="/login" element={<Login />} />
 
