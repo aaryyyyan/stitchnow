@@ -24,7 +24,7 @@ public class SecurityConfig {
         this.jwtFilter = jwtFilter;
     }
 
-    // 🔥 REQUIRED (THIS FIXES YOUR ERROR)
+    // PASSWORD ENCODER
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -36,34 +36,62 @@ public class SecurityConfig {
         return http
                 .csrf(csrf -> csrf.disable())
 
-                // 🔥 JWT MUST BE STATELESS
+                // JWT STATELESS
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
 
-                // 🔥 CORS
+                // CORS
                 .cors(cors -> cors.configurationSource(request -> {
                     CorsConfiguration c = new CorsConfiguration();
+
                     c.setAllowedOriginPatterns(List.of("*"));
-                    c.setAllowedMethods(List.of("GET","POST","PUT","DELETE","OPTIONS"));
+                    c.setAllowedMethods(List.of(
+                            "GET",
+                            "POST",
+                            "PUT",
+                            "DELETE",
+                            "OPTIONS"
+                    ));
+
                     c.setAllowedHeaders(List.of("*"));
+
                     return c;
                 }))
 
+                // AUTH RULES
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .requestMatchers("/api/login", "/api/register").permitAll()
-                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                        .anyRequest().authenticated()
+
+                        .requestMatchers(HttpMethod.OPTIONS, "/**")
+                        .permitAll()
+
+                        .requestMatchers(
+                                "/api/login",
+                                "/api/register",
+                                "/api/products/**"
+                        ).permitAll()
+
+                        .requestMatchers("/api/admin/**")
+                        .hasRole("ADMIN")
+
+                        .anyRequest()
+                        .authenticated()
                 )
 
-                // 🔥 JWT FILTER
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+                // JWT FILTER
+                .addFilterBefore(
+                        jwtFilter,
+                        UsernamePasswordAuthenticationFilter.class
+                )
 
-                // 🔥 CLEAN ERROR RESPONSE
+                // ERROR RESPONSE
                 .exceptionHandling(ex -> ex
                         .authenticationEntryPoint((req, res, e) -> {
-                            res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+
+                            res.setStatus(
+                                    HttpServletResponse.SC_UNAUTHORIZED
+                            );
+
                             res.getWriter().write("Unauthorized");
                         })
                 )

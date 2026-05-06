@@ -1,248 +1,257 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function SellerDashboard() {
 
-  const [products] = useState([
-    {
-      id: 1,
-      name: "Premium Wedding Suit",
-      price: "₹5,999",
-      stock: 12,
-      orders: 54,
-      image:
-        "https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=1200&auto=format&fit=crop",
-    },
-    {
-      id: 2,
-      name: "Designer Kurta",
-      price: "₹2,499",
-      stock: 18,
-      orders: 32,
-      image:
-        "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?q=80&w=1200&auto=format&fit=crop",
-    },
-  ]);
+  const [products, setProducts] = useState([]);
+
+  const [name, setName] = useState("");
+  const [image, setImage] = useState("");
+  const [price, setPrice] = useState("");
+  const [stock, setStock] = useState("");
+
+  // LOAD PRODUCTS
+  const loadProducts = async () => {
+
+    const res = await fetch(
+      "https://stitchnow.onrender.com/api/products"
+    );
+
+    const data = await res.json();
+
+    setProducts(data);
+  };
+
+  // ADD PRODUCT
+  const addProduct = async () => {
+
+    if (!name || !image || !price || !stock) {
+      alert("Fill all fields");
+      return;
+    }
+
+    await fetch(
+      "https://stitchnow.onrender.com/api/products",
+      {
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify({
+          name,
+          image,
+          price,
+          stock
+        })
+      }
+    );
+
+    setName("");
+    setImage("");
+    setPrice("");
+    setStock("");
+
+    loadProducts();
+  };
+
+  // DELETE PRODUCT
+  const deleteProduct = async (id) => {
+
+    await fetch(
+      `https://stitchnow.onrender.com/api/products/${id}`,
+      {
+        method: "DELETE"
+      }
+    );
+
+    loadProducts();
+  };
+
+  // AUTO LOAD
+  useEffect(() => {
+    loadProducts();
+  }, []);
 
   return (
     <div className="min-h-screen bg-gray-100">
 
-      {/* SIDEBAR */}
-      <div className="fixed left-0 top-0 h-full w-72 bg-black text-white p-8 hidden lg:flex flex-col">
+      {/* NAVBAR */}
+      <div className="bg-black text-white px-8 py-5 flex justify-between items-center">
 
-        <h1 className="text-4xl font-black mb-14">
-          StitchNow
-        </h1>
+        <div>
+          <h1 className="text-3xl font-black">
+            StitchNow Seller
+          </h1>
 
-        <div className="space-y-4">
-
-          <button className="w-full text-left px-5 py-4 rounded-2xl bg-indigo-600 font-bold">
-            Dashboard
-          </button>
-
-          <button className="w-full text-left px-5 py-4 rounded-2xl hover:bg-white/10">
-            Products
-          </button>
-
-          <button className="w-full text-left px-5 py-4 rounded-2xl hover:bg-white/10">
-            Orders
-          </button>
-
-          <button className="w-full text-left px-5 py-4 rounded-2xl hover:bg-white/10">
-            Customers
-          </button>
-
-          <button className="w-full text-left px-5 py-4 rounded-2xl hover:bg-white/10">
-            Analytics
-          </button>
-
+          <p className="text-gray-300">
+            Marketplace Dashboard
+          </p>
         </div>
+
+        <button className="bg-indigo-600 hover:bg-indigo-700 px-5 py-3 rounded-2xl font-bold">
+          Live Store
+        </button>
 
       </div>
 
       {/* MAIN */}
-      <div className="lg:ml-72">
-
-        {/* NAVBAR */}
-        <div className="bg-white px-8 py-5 flex justify-between items-center border-b">
-
-          <div>
-            <h2 className="text-3xl font-black">
-              Seller Dashboard
-            </h2>
-
-            <p className="text-gray-500">
-              Welcome back, Aryan 👋
-            </p>
-          </div>
-
-          <button className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-2xl font-bold">
-            + Add Product
-          </button>
-
-        </div>
+      <div className="p-8">
 
         {/* STATS */}
-        <div className="p-8 grid md:grid-cols-2 xl:grid-cols-4 gap-6">
+        <div className="grid md:grid-cols-3 gap-6 mb-10">
 
           <div className="bg-white rounded-3xl p-8 shadow-lg">
+
             <p className="text-gray-500 mb-3">
-              Total Revenue
+              Total Products
             </p>
 
             <h2 className="text-5xl font-black text-indigo-600">
-              ₹1.2L
+              {products.length}
             </h2>
+
           </div>
 
           <div className="bg-white rounded-3xl p-8 shadow-lg">
+
+            <p className="text-gray-500 mb-3">
+              Revenue
+            </p>
+
+            <h2 className="text-5xl font-black text-green-600">
+              ₹2.4L
+            </h2>
+
+          </div>
+
+          <div className="bg-white rounded-3xl p-8 shadow-lg">
+
             <p className="text-gray-500 mb-3">
               Orders
             </p>
 
-            <h2 className="text-5xl font-black text-green-600">
-              245
-            </h2>
-          </div>
-
-          <div className="bg-white rounded-3xl p-8 shadow-lg">
-            <p className="text-gray-500 mb-3">
-              Customers
-            </p>
-
             <h2 className="text-5xl font-black text-pink-600">
-              89
+              124
             </h2>
-          </div>
 
-          <div className="bg-white rounded-3xl p-8 shadow-lg">
-            <p className="text-gray-500 mb-3">
-              Products
-            </p>
-
-            <h2 className="text-5xl font-black text-orange-500">
-              34
-            </h2>
           </div>
 
         </div>
 
-        {/* CHART SECTION */}
-        <div className="px-8 pb-8">
+        {/* ADD PRODUCT */}
+        <div className="bg-white rounded-[32px] p-8 shadow-xl mb-12">
 
-          <div className="bg-white rounded-3xl p-8 shadow-lg">
+          <h2 className="text-4xl font-black mb-8">
+            Add New Product
+          </h2>
 
-            <div className="flex items-center justify-between mb-10">
+          <div className="grid md:grid-cols-2 gap-5">
 
-              <div>
-                <h2 className="text-3xl font-black">
-                  Sales Analytics
-                </h2>
+            <input
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Product Name"
+              className="border p-4 rounded-2xl outline-none"
+            />
 
-                <p className="text-gray-500">
-                  Monthly seller performance
-                </p>
-              </div>
+            <input
+              value={price}
+              onChange={(e) => setPrice(e.target.value)}
+              placeholder="Price"
+              className="border p-4 rounded-2xl outline-none"
+            />
 
-              <button className="bg-gray-100 px-5 py-3 rounded-2xl font-semibold">
-                Last 30 Days
-              </button>
+            <input
+              value={stock}
+              onChange={(e) => setStock(e.target.value)}
+              placeholder="Stock"
+              className="border p-4 rounded-2xl outline-none"
+            />
 
-            </div>
-
-            <div className="h-[350px] flex items-end gap-5">
-
-              {[40, 80, 60, 100, 70, 120, 90].map((h, i) => (
-                <div
-                  key={i}
-                  className="flex-1 bg-indigo-500 rounded-t-3xl hover:bg-indigo-600 transition"
-                  style={{ height: `${h}%` }}
-                ></div>
-              ))}
-
-            </div>
+            <input
+              value={image}
+              onChange={(e) => setImage(e.target.value)}
+              placeholder="Image URL"
+              className="border p-4 rounded-2xl outline-none"
+            />
 
           </div>
+
+          <button
+            onClick={addProduct}
+            className="mt-8 bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-4 rounded-2xl font-bold text-lg"
+          >
+            Add Product
+          </button>
 
         </div>
 
         {/* PRODUCTS */}
-        <div className="px-8 pb-12">
+        <div>
 
           <div className="flex items-center justify-between mb-8">
 
             <div>
-              <h2 className="text-4xl font-black">
-                Your Products
+              <h2 className="text-5xl font-black">
+                Live Products
               </h2>
 
-              <p className="text-gray-500">
-                Manage your fashion inventory
+              <p className="text-gray-500 text-lg">
+                Products from database
               </p>
             </div>
 
-            <button className="bg-black text-white px-6 py-3 rounded-2xl font-bold">
-              View All
-            </button>
-
           </div>
 
-          <div className="grid lg:grid-cols-2 gap-8">
+          <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-8">
 
-            {products.map(product => (
+            {products.map((product) => (
 
               <div
                 key={product.id}
                 className="bg-white rounded-[32px] overflow-hidden shadow-xl hover:shadow-2xl transition"
               >
 
-                <div className="grid md:grid-cols-2">
+                <img
+                  src={product.image}
+                  className="h-[320px] w-full object-cover"
+                />
 
-                  <img
-                    src={product.image}
-                    className="h-full min-h-[320px] object-cover"
-                  />
+                <div className="p-6">
 
-                  <div className="p-8 flex flex-col justify-between">
+                  <div className="bg-green-100 text-green-700 inline-flex px-4 py-2 rounded-full font-bold text-sm mb-5">
+                    In Stock
+                  </div>
 
-                    <div>
+                  <h3 className="text-3xl font-black mb-4 leading-tight">
+                    {product.name}
+                  </h3>
 
-                      <div className="bg-green-100 text-green-700 inline-flex px-4 py-2 rounded-full font-bold text-sm mb-5">
-                        Active Product
-                      </div>
+                  <div className="space-y-3 text-lg text-gray-600 mb-8">
 
-                      <h3 className="text-3xl font-black mb-5 leading-tight">
-                        {product.name}
-                      </h3>
+                    <p>
+                      Price: ₹{product.price}
+                    </p>
 
-                      <div className="space-y-3 text-gray-600 text-lg">
+                    <p>
+                      Stock: {product.stock}
+                    </p>
 
-                        <p>
-                          Price: {product.price}
-                        </p>
+                  </div>
 
-                        <p>
-                          Stock: {product.stock}
-                        </p>
+                  <div className="flex gap-4">
 
-                        <p>
-                          Orders: {product.orders}
-                        </p>
+                    <button className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white py-4 rounded-2xl font-bold">
+                      Edit
+                    </button>
 
-                      </div>
-
-                    </div>
-
-                    <div className="flex gap-4 mt-8">
-
-                      <button className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white py-4 rounded-2xl font-bold transition">
-                        Edit
-                      </button>
-
-                      <button className="flex-1 border border-gray-300 hover:bg-gray-100 py-4 rounded-2xl font-bold transition">
-                        Delete
-                      </button>
-
-                    </div>
+                    <button
+                      onClick={() => deleteProduct(product.id)}
+                      className="flex-1 bg-red-500 hover:bg-red-600 text-white py-4 rounded-2xl font-bold"
+                    >
+                      Delete
+                    </button>
 
                   </div>
 
