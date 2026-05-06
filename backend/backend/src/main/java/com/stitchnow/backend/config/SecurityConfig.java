@@ -8,9 +8,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.cors.CorsConfiguration;
 
 import java.util.List;
@@ -34,18 +34,24 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         return http
+
+                // DISABLE CSRF
                 .csrf(csrf -> csrf.disable())
 
                 // JWT STATELESS
                 .sessionManagement(session ->
-                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                        session.sessionCreationPolicy(
+                                SessionCreationPolicy.STATELESS
+                        )
                 )
 
                 // CORS
                 .cors(cors -> cors.configurationSource(request -> {
+
                     CorsConfiguration c = new CorsConfiguration();
 
                     c.setAllowedOriginPatterns(List.of("*"));
+
                     c.setAllowedMethods(List.of(
                             "GET",
                             "POST",
@@ -59,21 +65,48 @@ public class SecurityConfig {
                     return c;
                 }))
 
-                // AUTH RULES
+                // AUTHORIZATION
                 .authorizeHttpRequests(auth -> auth
 
-                        .requestMatchers(HttpMethod.OPTIONS, "/**")
-                        .permitAll()
-
+                        // OPTIONS
                         .requestMatchers(
-                                "/api/login",
-                                "/api/register",
+                                HttpMethod.OPTIONS,
+                                "/**"
+                        ).permitAll()
+
+                        // PRODUCTS APIs
+                        .requestMatchers(
+                                HttpMethod.GET,
                                 "/api/products/**"
                         ).permitAll()
 
-                        .requestMatchers("/api/admin/**")
-                        .hasRole("ADMIN")
+                        .requestMatchers(
+                                HttpMethod.POST,
+                                "/api/products/**"
+                        ).permitAll()
 
+                        .requestMatchers(
+                                HttpMethod.PUT,
+                                "/api/products/**"
+                        ).permitAll()
+
+                        .requestMatchers(
+                                HttpMethod.DELETE,
+                                "/api/products/**"
+                        ).permitAll()
+
+                        // LOGIN + REGISTER
+                        .requestMatchers(
+                                "/api/login",
+                                "/api/register"
+                        ).permitAll()
+
+                        // ADMIN
+                        .requestMatchers(
+                                "/api/admin/**"
+                        ).hasRole("ADMIN")
+
+                        // EVERYTHING ELSE
                         .anyRequest()
                         .authenticated()
                 )
