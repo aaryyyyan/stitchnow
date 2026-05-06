@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import OrderTracking from "./pages/OrderTracking";
 import Checkout from "./pages/Checkout";
 import Wishlist from "./pages/Wishlist";
 import Cart from "./pages/Cart";
@@ -13,7 +14,7 @@ export default function App() {
   return (
     <BrowserRouter>
 
-   <Routes>
+  <Routes>
 
   <Route path="/" element={<Home />} />
 
@@ -26,6 +27,8 @@ export default function App() {
   <Route path="/wishlist" element={<Wishlist />} />
 
   <Route path="/checkout" element={<Checkout />} />
+
+  <Route path="/tracking" element={<OrderTracking />} />
 
   <Route path="/login" element={<Login />} />
 
