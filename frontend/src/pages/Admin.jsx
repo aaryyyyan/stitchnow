@@ -32,7 +32,7 @@ export default function Admin() {
   };
 
   const deleteOrder = async (id) => {
-    await fetch(`http://localhost:8080/api/admin/orders/${id}`, {
+    await fetch(`https://stitchnow.onrender.com/api/admin/orders/${id}`, {
       method: "DELETE",
       headers: {
         Authorization: "Bearer " + token
