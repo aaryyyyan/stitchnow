@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-
+import ProductDetails from "./pages/ProductDetails";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
@@ -10,11 +10,13 @@ export default function App() {
   return (
     <BrowserRouter>
 
-     <Routes>
+    <Routes>
 
   <Route path="/" element={<Home />} />
 
   <Route path="/products" element={<Products />} />
+
+  <Route path="/product" element={<ProductDetails />} />
 
   <Route path="/login" element={<Login />} />
 
